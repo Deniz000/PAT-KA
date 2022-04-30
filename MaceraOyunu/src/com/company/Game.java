@@ -10,8 +10,10 @@ public class Game {
         //String name = input.nextLine();
         Player player = new Player("Gül");
         System.out.println("Hoşgeldin " + player.getName() + " hadi başlayalım");
+        System.out.println("*****************");
         System.out.println("Oyun karakterleri: ");
         player.selectChar();
+        player.selectLocation();
     }
 
 }

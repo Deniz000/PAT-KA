@@ -10,10 +10,12 @@ public class Player {
     private int damage;
     private int health;
     private int money;
+    private Inventory inventory;
     private Scanner input = new Scanner(System.in);
 
     public Player(String name){
         this.name = name;
+        this.inventory = new Inventory();
     }
 
     public void selectChar(){
@@ -53,6 +55,37 @@ public class Player {
         this.setMoney(character.getMoney());
     }
 
+    public void selectLocation(){
+        Location location = null;
+        while(true) {
+            System.out.println();
+            System.out.println("----------------------------------------------------------");
+            System.out.println("Şimdi de bir bölge seç! ");
+            System.out.println("Bölgeler: ");
+            Location[] locations = {new SafeHouse(this), new ToolsStore(this)};
+            for (Location locationn : locations) {
+                System.out.println("ID: " + locationn.getId() + " bölge: " + locationn.getName()
+                        + " Karakter: " + locationn.getPlayer());
+            }
+            System.out.print("Lütfen seçimi yapınız: ");
+            int noLoc = input.nextInt();
+            switch (noLoc) {
+                case 1:
+                    location = new SafeHouse(this);
+                    break;
+                case 2:
+                    location = new ToolsStore(this);
+                    break;
+                default:
+                    location = new SafeHouse(this);
+                    break;
+            }
+            if(!location.onLocation()){
+                System.out.println("GAME OVER");
+                break;
+            }
+        }
+    }
     public int getId() {
         return id;
     }
@@ -97,7 +130,16 @@ public class Player {
         return money;
     }
 
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+
     public void setMoney(int money) {
         this.money = money;
+
     }
 }
