@@ -62,7 +62,7 @@ public class Player {
             System.out.println("----------------------------------------------------------");
             System.out.println("Şimdi de bir bölge seç! ");
             System.out.println("Bölgeler: ");
-            Location[] locations = {new SafeHouse(this), new ToolsStore(this)};
+            Location[] locations = {new SafeHouse(this), new ToolsStore(this), new Exit(this)};
             for (Location locationn : locations) {
                 System.out.println("ID: " + locationn.getId() + " bölge: " + locationn.getName()
                         + " Karakter: " + locationn.getPlayer());
@@ -70,6 +70,9 @@ public class Player {
             System.out.print("Lütfen seçimi yapınız: ");
             int noLoc = input.nextInt();
             switch (noLoc) {
+                case 0:
+                    location = null;
+                    break;
                 case 1:
                     location = new SafeHouse(this);
                     break;
@@ -80,7 +83,11 @@ public class Player {
                     location = new SafeHouse(this);
                     break;
             }
-            if(!location.onLocation()){
+            if(location == null){
+                System.out.println("Oyundan çıkılıyor ...");
+                break;
+            }
+            else if(!location.onLocation()){
                 System.out.println("GAME OVER");
                 break;
             }
