@@ -5,7 +5,7 @@ public class Inventory {
     private Armor armor;
 
     public Inventory() {
-        this.weapon = new Weapon(-1, "Yumruk", 0, 0);
+        this.weapon = new Weapon(-1, "Yumruk", 5, 0);
         this.armor = new Armor(-1, "Paçavra",0,0);
     }
 

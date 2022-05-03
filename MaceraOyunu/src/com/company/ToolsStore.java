@@ -24,9 +24,11 @@ public class ToolsStore extends NormalLocation{
                 case 1:
                     printWeapon();
                     buyWeapon();
+                    showMenu =false;
                     break;
                 case 2:
                     printArmor();
+                    showMenu =false;
                     break;
                 case 3:
                     System.out.println("Bir daha bekleriz");
@@ -35,6 +37,7 @@ public class ToolsStore extends NormalLocation{
                 default:
                     System.out.println("Silahlar seçildi");
                     printWeapon();
+                    showMenu =false;
                     break;
             }
         }
