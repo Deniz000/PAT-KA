@@ -62,10 +62,11 @@ public class Player {
             System.out.println("----------------------------------------------------------");
             System.out.println("Şimdi de bir bölge seç! ");
             System.out.println("Bölgeler: ");
-            Location[] locations = {new SafeHouse(this), new ToolsStore(this), new Exit(this)};
+            Location[] locations = {new SafeHouse(this), new ToolsStore(this),
+                    new Cave(this), new Forest(this),
+                    new River(this), new Exit(this)};
             for (Location locationn : locations) {
-                System.out.println("ID: " + locationn.getId() + " bölge: " + locationn.getName()
-                        + " Karakter: " + locationn.getPlayer());
+                System.out.println(locationn.getId() + ". bölge: " + locationn.getName());
             }
             System.out.print("Lütfen seçimi yapınız: ");
             int noLoc = input.nextInt();
@@ -79,7 +80,17 @@ public class Player {
                 case 2:
                     location = new ToolsStore(this);
                     break;
+                case 3:
+                    location = new Cave(this);
+                    break;
+                case 4:
+                    location = new Forest(this);
+                    break;
+                case 5:
+                    location = new River(this);
+                    break;
                 default:
+                    System.out.println("Geçerli bölge değil! Güvenli bölgeye gidiliyor!");
                     location = new SafeHouse(this);
                     break;
             }
