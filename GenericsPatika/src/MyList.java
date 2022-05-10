@@ -2,7 +2,9 @@ package src;
 
 import sun.security.util.ArrayUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MyList<T> {
     private int myArray[];
@@ -105,6 +107,8 @@ public class MyList<T> {
     public int indexOf(T data){
         return 0;
     }
+
+    List<Integer> a = new ArrayList<>();
 
 
 }
