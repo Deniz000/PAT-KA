@@ -28,9 +28,5 @@ public class Main {
             System.out.println(book.getNumberOfPage() + " ->" + book.getName());
         }
 
-        ArrayList<String> arr = new ArrayList<>();
-        LinkedList<Integer> aaar = new LinkedList<>();
-        Map<Integer,Integer> keys = new HashMap<>();
-        keys.
     }
 }
