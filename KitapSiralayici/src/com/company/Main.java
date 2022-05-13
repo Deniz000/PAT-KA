@@ -1,6 +1,7 @@
 package com.company;
 
-import java.util.TreeSet;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class Main {
 
@@ -26,5 +27,10 @@ public class Main {
         for(Book book: sortByPage){
             System.out.println(book.getNumberOfPage() + " ->" + book.getName());
         }
+
+        ArrayList<String> arr = new ArrayList<>();
+        LinkedList<Integer> aaar = new LinkedList<>();
+        Map<Integer,Integer> keys = new HashMap<>();
+        keys.
     }
 }
