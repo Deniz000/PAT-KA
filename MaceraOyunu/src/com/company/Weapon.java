@@ -6,6 +6,9 @@ public class Weapon {
     private int damage;
     private int price;
 
+    public Weapon() {
+    }
+
     public Weapon(int id, String name, int damage, int price) {
         this.id = id;
         this.name = name;

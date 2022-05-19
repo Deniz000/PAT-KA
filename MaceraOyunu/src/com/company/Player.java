@@ -1,6 +1,7 @@
 package com.company;
 
 import java.nio.file.LinkPermission;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Player {
@@ -12,6 +13,7 @@ public class Player {
     private int orijinalHealth;
     private int money;
     private Inventory inventory;
+    private Location location = null;
     private Scanner input = new Scanner(System.in);
 
     public Player(String name){
@@ -51,14 +53,13 @@ public class Player {
 
     private void initPlayer(Character character) {
         this.setCharName(character.getName());
-        this.setDamage(character.getDamage());
+        this.setDamage(character.getDamage() + this.getDamage());
         this.setHealth(character.getHealth());
         this.setOrijinalHealth(character.getHealth());
         this.setMoney(character.getMoney());
     }
 
     public void selectLocation(){
-        Location location = null;
         while(true) {
             System.out.println();
             System.out.println("----------------------------------------------------------");
@@ -66,12 +67,13 @@ public class Player {
             System.out.println("Bölgeler: ");
             Location[] locations = {new SafeHouse(this), new ToolsStore(this),
                     new Cave(this), new Forest(this),
-                    new River(this), new Exit(this)};
+                    new River(this), new Quarry(this), new Exit(this)};
             for (Location locationn : locations) {
                 System.out.println(locationn.getId() + ". bölge: " + locationn.getName());
             }
             System.out.print("Lütfen seçimi yapınız: ");
             int noLoc = input.nextInt();
+
             switch (noLoc) {
                 case 0:
                     location = null;
@@ -91,6 +93,10 @@ public class Player {
                 case 5:
                     location = new River(this);
                     break;
+                case 6:
+                    Quarry quarry = new Quarry(this);
+                    location = quarry;
+                    break;
                 default:
                     System.out.println("Geçerli bölge değil! Güvenli bölgeye gidiliyor!");
                     location = new SafeHouse(this);
@@ -104,6 +110,12 @@ public class Player {
                 System.out.println("GAME OVER");
                 break;
             }
+        }
+    }
+    public void isDelete(int choose){
+        if(location.isSelectCombatValue()){
+            System.out.println("Bu bölgedeki tüm yaratıklar öldü lütfen başka bir bölge seçin!");
+
         }
     }
     public int getId() {
@@ -121,6 +133,7 @@ public class Player {
     public void setName(String name) {
         this.name = name;
     }
+
 
     public String getCharName() {
         return charName;
@@ -178,4 +191,68 @@ public class Player {
     public void setOrijinalHealth(int orijinalHealth) {
         this.orijinalHealth = orijinalHealth;
     }
+
+    public void awardForQarry(int possib){
+        Weapon[] weapons =
+         {
+
+                 Weapon.getWeaponById(3),
+                 Weapon.getWeaponById(3),
+                 Weapon.getWeaponById(2),
+                 Weapon.getWeaponById(2),
+                 Weapon.getWeaponById(2),
+                 Weapon.getWeaponById(1),
+                 Weapon.getWeaponById(1),
+                 Weapon.getWeaponById(1),
+                 Weapon.getWeaponById(1),
+                 Weapon.getWeaponById(1)
+            };
+        Armor[] armors =
+         {
+                 Armor.getArmorById(3),
+                 Armor.getArmorById(3),
+                 Armor.getArmorById(2),
+                 Armor.getArmorById(2),
+                 Armor.getArmorById(2),
+                 Armor.getArmorById(1),
+                 Armor.getArmorById(1),
+                 Armor.getArmorById(1),
+                 Armor.getArmorById(1),
+                 Armor.getArmorById(1)
+         };
+
+        int money[] = {1,1,1,1,1,5,5,5,10,10};
+
+        Random random = new Random();
+        int possRn = possib;
+        int percent;
+        if(possRn < 3){
+            percent = random.nextInt(10);
+            Weapon weapon = weapons[percent];
+            System.out.println("Tbrikler! Silah kazandınız.");
+            System.out.println("Önceki silahınız: " + this.getWeapon().getName());
+            this.getInventory().setWeapon(weapon);
+            System.out.println("Yeni silahınız: " + this.getWeapon().getName());
+
+        }
+        else if(2<possRn  || possRn < 6){
+            percent = random.nextInt(10);
+            Armor armor = armors[percent];
+            System.out.println("Terikler! Zırh kazandınız.");
+            System.out.println("Önceki silahınız: " + this.getArmor().getName());
+            this.getInventory().setArmor(armor);
+            System.out.println("Yeni silahınız: " + this.getArmor().getName());
+        }
+        else if (5 < possRn || possRn<11){
+            percent = random.nextInt(10);
+            int gain = money[percent];
+            System.out.println("Tebrikler! Altın kazandınız.");
+            System.out.println("Önceki paranız: " + this.getMoney() + " altın");
+            this.setMoney(this.getMoney() + gain);
+            System.out.println("yeni paranız: " + getMoney() + " altın");
+        }
+        else{
+            System.out.println("Malesef hiçbir şey kazanamadınız!");
+        }
+        }
 }

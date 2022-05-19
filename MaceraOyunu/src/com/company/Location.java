@@ -6,6 +6,7 @@ public abstract class Location {
     private int id;
     private Player player;
     private String name;
+    private boolean selectCombatValue = false;
     public static Scanner scanner = new Scanner(System.in);
 
     public Location(int id, Player player, String name) {
@@ -37,5 +38,13 @@ public abstract class Location {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isSelectCombatValue() {
+        return selectCombatValue;
+    }
+
+    public void setSelectCombatValue(boolean selectCombatValue) {
+        this.selectCombatValue = selectCombatValue;
     }
 }
