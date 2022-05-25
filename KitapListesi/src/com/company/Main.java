@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Main {
@@ -20,5 +21,11 @@ public class Main {
                 .forEach(i -> System.out.println("sayfa sayısı: " + i.getPageNumber()
                 + " " + i.getNameOfBook()));
 
+        Comparator<Double> doubleComparator = new Comparator<Double>() {
+            @Override
+            public int compare(Double o1, Double o2) {
+                return 0;
+            }
+        }
     }
 }
