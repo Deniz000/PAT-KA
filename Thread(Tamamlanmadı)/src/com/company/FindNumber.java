@@ -3,34 +3,54 @@ package com.company;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FindNumber extends Thread {
-    private static List<Integer> tekSayi = new ArrayList<>();
-    private static List<Integer> ciftSayi = new ArrayList<>();
-    private List<Integer> liste;
+public class FindNumber implements Runnable{
+    private List<Integer> odd = new ArrayList<>();
+    private List<Integer> even = new ArrayList<>();
+    private List<Integer> number = new ArrayList<>();
+    private final Object LOCK = new Object();
+    List<Integer> full = new ArrayList<>();
 
-    public FindNumber(List<Integer> liste){
-        this.liste = liste;
+    public FindNumber() {
     }
+
+    public FindNumber(List<Integer> number) {
+        this.number = number;
+    }
+
     @Override
     public void run() {
-        bulTekCift(this.liste);
-        printValue(Thread.currentThread().getName());
-    }
 
-    public synchronized void bulTekCift(List<Integer> liste){
-        for(int i = 0; i<liste.size(); i++){
-            int sayi = liste.get(i);
-            if(sayi%2 == 0){
-                ciftSayi.add(i);
-            }
-            else{
-                tekSayi.add(i);
+        synchronized (LOCK){
+            for (int i = 0; i < 2500; i++) {
+                if (number.get(i) % 2 == 0) {
+                    even.add(number.get(i));
+                } else {
+                    odd.add(number.get(i));
+                }
             }
         }
+        full = odd;
+        print();
+    }
+    public void print(){
+        System.out.println(Thread.currentThread().getName() + " tek " + " -- " + odd);
+        System.out.println(Thread.currentThread().getName() + " çift " + " -- " + even);
+        System.out.println(Thread.currentThread().getName() + " full " + " -- " + full);
     }
 
-    public void printValue(String threadAdi){
-        System.out.println(threadAdi + " -- " + tekSayi);
-        System.out.println(threadAdi + " -- " + ciftSayi);
+    public List<Integer> getOdd() {
+        return odd;
+    }
+
+    public void setOdd(List<Integer> odd) {
+        this.odd = odd;
+    }
+
+    public List<Integer> getEven() {
+        return even;
+    }
+
+    public void setEven(List<Integer> even) {
+        this.even = even;
     }
 }
