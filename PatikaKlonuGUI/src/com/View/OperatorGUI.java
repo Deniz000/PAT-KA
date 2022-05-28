@@ -3,14 +3,16 @@ package com.View;
 import com.Helper.Config;
 import com.Helper.DbConnector;
 import com.Helper.Helper;
-import com.Model.Operator;
 import com.Model.User;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 public class OperatorGUI extends JFrame {
 
@@ -29,6 +31,8 @@ public class OperatorGUI extends JFrame {
     private JTextField txtPastword;
     private JComboBox comboBox1;
     private JButton btnAddUser;
+    private JButton btnDelete;
+    private JTextField txtDeleteId;
     private DefaultTableModel mdl_user_list; //vektor tipli iki değişkeni biri başşlık tutar diğeri satırları
     private Object[] row_user_list;
     int count = 7;
@@ -44,20 +48,52 @@ public class OperatorGUI extends JFrame {
         // Object[] firstRow = {"1","Deniz Ozdemir","Deniz","123","1"};
         //mdl_user_list.addRow(firstRow);
 
-        mdl_user_list = new DefaultTableModel();
+        mdl_user_list = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if(column == 0)
+                    return false;
+                return super.isCellEditable(row, column);
+            }
+        };
         sort();
         usersTable.setModel(mdl_user_list);
         usersTable.getTableHeader().setReorderingAllowed(false);
+        usersTable.getSelectionModel().addListSelectionListener(e -> {
+            try {
+                String selectedUserId = usersTable.getValueAt(usersTable.getSelectedRow(), 0).toString();
+                txtDeleteId.setText(selectedUserId);
+            }
+            catch (Exception exception){
+                System.out.println(exception.getMessage());
+            }
+        });
+        usersTable.getModel().addTableModelListener(e -> {
+            if(e.getType() == TableModelEvent.UPDATE){
+                int id = Integer.parseInt(usersTable.getValueAt(usersTable.getSelectedRow(),0).toString());
+                String name = usersTable.getValueAt(usersTable.getSelectedRow(),1).toString();
+                String userName = usersTable.getValueAt(usersTable.getSelectedRow(),2).toString();
+                String password = usersTable.getValueAt(usersTable.getSelectedRow(),3).toString();
+                String type = usersTable.getValueAt(usersTable.getSelectedRow(),4).toString();
+
+                if(User.update(id,name,userName,password,type)){
+                    Helper.showMsg("succed");
+                }
+                else{
+                    Helper.showMsg("error");
+                }
+            }
+        });
 
         btnAddUser.addActionListener(e -> {
             if (Helper.isFieldEmpty(txtName)||
                     Helper.isFieldEmpty(txtUserName)||
                     Helper.isFieldEmpty(txtPastword) ){
-                JOptionPane.showConfirmDialog(null,"lütfen tüm alanları doldurun", "Hata",JOptionPane.CLOSED_OPTION);
+                Helper.showMsg("fill");
             }
             else{
                 if(addUser(count)){
-                    JOptionPane.showConfirmDialog(null,txtName.getName() + " Başarıyla Eklendi!", "Bilgi",JOptionPane.CLOSED_OPTION);
+                    Helper.showMsg("succed");
                     sort();
                     txtName.setText("");
                     txtUserName.setText("");
@@ -71,12 +107,29 @@ public class OperatorGUI extends JFrame {
 
             }
         });
+        btnDelete.addActionListener(e -> {
+            if(Helper.isFieldEmpty(txtDeleteId)){
+                Helper.showMsg("fill");
+            }
+            else{
+                if(deleteUserByıd()){
+                    Helper.showMsg("succed");
+                    sort();
+                    txtDeleteId.setText("");
+                    return;
+                }
+                else{
+                    System.out.println("Üzgünüz. Bir aksilik oldu!");
+                    return;
+                }
+            }
+        });
     }
     public void sort(){
         DefaultTableModel clearModel = (DefaultTableModel) usersTable.getModel();
         clearModel.setRowCount(0);
+        Object[] col_user_list = {"ID", "Ad Soyad", "Kullanıcı Adı", "Şifre", "Üyelik Tipi"};
         for(User user: User.getList()){
-            Object[] col_user_list = {"ID", "Ad Soyad", "Kullanıcı Adı", "Şifre", "Üyelik Tipi"};
             mdl_user_list.setColumnIdentifiers(col_user_list);
             Object[] row = new Object[col_user_list.length];
             row[0] = user.getId();
@@ -88,7 +141,6 @@ public class OperatorGUI extends JFrame {
         }
         User.countCurrent();
     }
-
     public boolean addUser(int id){
         String name = txtName.getText();
         String userName = txtUserName.getText();
@@ -102,6 +154,20 @@ public class OperatorGUI extends JFrame {
        else{
            return false;
        }
+    }
+    public boolean deleteUserByıd() {
+        try {
+            int idValue = Integer.parseInt(txtDeleteId.getText());
+            if (User.deleteById(idValue)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            Helper.showMsg("Var olan id değerlerinden herhangi birini girmelisiniz!");
+        }
+        return false;
     }
 
     public static void main(String[] args) {

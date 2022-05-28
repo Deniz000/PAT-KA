@@ -65,14 +65,15 @@ public class User {
     public void setType_id(int type_id) {
         this.type_id = type_id;
     }
-    public static ArrayList<User> getList(){
+
+    public static ArrayList<User> getList() {
         ArrayList<User> arrayList = new ArrayList<>();
         String quarry = "Select * From users";
         User obj;
         try {
             Statement statement = DbConnector.getInstance().createStatement();
             ResultSet rs = statement.executeQuery(quarry);
-            while(rs.next()){
+            while (rs.next()) {
                 obj = new User();
                 obj.setId(rs.getInt("id"));
                 obj.setName(rs.getString("name"));
@@ -87,14 +88,14 @@ public class User {
         return arrayList;
     }
 
-    public static int countCurrent(){
+    public static int countCurrent() {
         String query = "Select count(*) as total From users";
         int count = -1;
         int a = -1;
         try {
             Statement st = DbConnector.getInstance().createStatement();
             ResultSet rs3 = st.executeQuery(query);
-            while(rs3.next()){
+            while (rs3.next()) {
                 count = rs3.getInt(1);
             }
         } catch (SQLException e) {
@@ -102,9 +103,9 @@ public class User {
         }
         return count;
     }
-    public static boolean add(String name, String userName, String password, String type){
+    public static int switchControl(String type){
         int typeValue;
-        switch (type){
+        switch (type) {
             case "Operator":
                 typeValue = 1;
                 break;
@@ -118,20 +119,57 @@ public class User {
                 typeValue = 1;
                 break;
         }
+        return typeValue;
+    }
+    public static boolean add(String name, String userName, String password, String type) {
+        int typeValue = switchControl(type);
 
         int total = countCurrent() + 1;
         String querry = "INSERT INTO users(id,name,user_name,password,type_id) values (?,?,?,?,?) ";
         try {
             PreparedStatement pr = DbConnector.getInstance().prepareStatement(querry);
-            pr.setInt(1,total);
-            pr.setString(2,name);
-            pr.setString(3,userName);
-            pr.setString(4,password);
-            pr.setInt(5,typeValue);
+            pr.setInt(1, total);
+            pr.setString(2, name);
+            pr.setString(3, userName);
+            pr.setString(4, password);
+            pr.setInt(5, typeValue);
             return pr.executeUpdate() != -1;  // ekler, true döner çalışmazsa aşağıda false dönecektir
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
+
+
+    public static boolean deleteById(int idValue) {
+        String sql = "delete from users where id = ?";
+        try {
+            PreparedStatement preparedStatement = DbConnector.getInstance().prepareStatement(sql);
+            preparedStatement.setInt(1,idValue);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean update(int id, String name, String userName, String password, String type){
+        int typeValue = switchControl(type);
+        String query = "Update users set name = ?, user_name =?, password=?, type_id = ? where id = ?";
+        try {
+            PreparedStatement preparedStatement = DbConnector.getInstance().prepareStatement(query);
+            preparedStatement.setString(1,name);
+            preparedStatement.setString(2,userName);
+            preparedStatement.setString(3,password);
+            preparedStatement.setInt(4,typeValue);
+            preparedStatement.setInt(5, id);
+
+            return (preparedStatement.executeUpdate() != -1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
 }

@@ -6,7 +6,34 @@ import java.awt.*;
 public class Helper {
     public static boolean isFieldEmpty(JTextField jTextField){
         return jTextField.getText().trim().isEmpty();
+    }
 
+    public static void showMsg(String msg){
+        optionPageTR();
+        String mesaj;
+        String title;
+        switch (msg){
+            case "fill":
+                mesaj = "Lütfen tüm alanları doldurun!";
+                title = "Hata!";
+                break;
+            case "succed":
+                mesaj = "İşlem Başarılı!";
+                title = "Result";
+                break;
+            case "error":
+                mesaj = "İşlem Başarısız!";
+                title = "Error";
+                break;
+            default:
+                mesaj = msg;
+                title = "Mesaj";
+
+        }
+        JOptionPane.showMessageDialog(null,mesaj,title,JOptionPane.INFORMATION_MESSAGE);
+    }
+    public static void optionPageTR(){
+        UIManager.put("OptionPane.okButtonText", "Tamam");
     }
     public static int screenCenterLoc(String axis, Dimension size){
         //Dimension kısmı bizim oluşturduğumuz ekranın boyutu
