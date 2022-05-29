@@ -3,16 +3,15 @@ package com.View;
 import com.Helper.Config;
 import com.Helper.DbConnector;
 import com.Helper.Helper;
+import com.Model.Patika;
 import com.Model.User;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class OperatorGUI extends JFrame {
 
@@ -33,8 +32,22 @@ public class OperatorGUI extends JFrame {
     private JButton btnAddUser;
     private JButton btnDelete;
     private JTextField txtDeleteId;
-    private DefaultTableModel mdl_user_list; //vektor tipli iki değişkeni biri başşlık tutar diğeri satırları
-    private Object[] row_user_list;
+    private JTextField txtNameSrc;
+    private JTextField txtUserNameSrc;
+    private JComboBox comboSearch;
+    private JButton btnSrc;
+    private JButton btnListele;
+    private JPanel panelPatikaList;
+    private JScrollPane scrollPane;
+    private JTable patikasTable;
+    private JTextField txtAddPatikaName;
+    private JButton btnAddPatika;
+    private DefaultTableModel mdl_patika_list;
+    Object[] colm_patika_list = {"ID", "Patika Adı"};
+    private Object[] row_patika_list = new Object[colm_patika_list.length];
+    private DefaultTableModel mdl_user_list; //vektor tipli iki değişkeni biri başlık tutar diğeri satırları
+    Object[] col_user_list = {"ID", "Ad Soyad", "Kullanıcı Adı", "Şifre", "Üyelik Tipi"};
+    private Object[] row_user_list =  new Object[col_user_list.length];
     int count = 7;
     public OperatorGUI(){
         Helper.setLayout();
@@ -47,7 +60,33 @@ public class OperatorGUI extends JFrame {
         setResizable(false);
         // Object[] firstRow = {"1","Deniz Ozdemir","Deniz","123","1"};
         //mdl_user_list.addRow(firstRow);
+        // # Patika Codes
+        mdl_patika_list = new DefaultTableModel();
+        mdl_patika_list.setColumnIdentifiers(colm_patika_list);
+        patikasTable.setModel(mdl_patika_list);
+        patikasTable.getTableHeader().setReorderingAllowed(false);
+        patikasTable.getColumnModel().getColumn(0).setMaxWidth(100);
+        sortPatika();
+        btnAddPatika.addActionListener(e -> {
+            if(Helper.isFieldEmpty(txtAddPatikaName)){
+                Helper.showMsg("fill");
+            }
+            else{
+                if(addPatika()){
+                    Helper.showMsg("succed");
+                    txtAddPatikaName.setText("");
+                    sortPatika();
+                    return;
+                }
+                else{
+                    System.out.println("Üzgünüz. Bir aksilik oldu!");
+                    return;
+                }
+            }
+        });
 
+
+        //  #User codes
         mdl_user_list = new DefaultTableModel(){
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -56,6 +95,7 @@ public class OperatorGUI extends JFrame {
                 return super.isCellEditable(row, column);
             }
         };
+        mdl_user_list.setColumnIdentifiers(col_user_list);
         sort();
         usersTable.setModel(mdl_user_list);
         usersTable.getTableHeader().setReorderingAllowed(false);
@@ -71,10 +111,10 @@ public class OperatorGUI extends JFrame {
         usersTable.getModel().addTableModelListener(e -> {
             if(e.getType() == TableModelEvent.UPDATE){
                 int id = Integer.parseInt(usersTable.getValueAt(usersTable.getSelectedRow(),0).toString());
-                String name = usersTable.getValueAt(usersTable.getSelectedRow(),1).toString();
-                String userName = usersTable.getValueAt(usersTable.getSelectedRow(),2).toString();
+                String name = usersTable.getValueAt(usersTable.getSelectedRow(),1).toString().trim();
+                String userName = usersTable.getValueAt(usersTable.getSelectedRow(),2).toString().trim();
                 String password = usersTable.getValueAt(usersTable.getSelectedRow(),3).toString();
-                String type = usersTable.getValueAt(usersTable.getSelectedRow(),4).toString();
+                String type = usersTable.getValueAt(usersTable.getSelectedRow(),4).toString().trim();
 
                 if(User.update(id,name,userName,password,type)){
                     Helper.showMsg("succed");
@@ -92,7 +132,7 @@ public class OperatorGUI extends JFrame {
                 Helper.showMsg("fill");
             }
             else{
-                if(addUser(count)){
+                if(addUser()){
                     Helper.showMsg("succed");
                     sort();
                     txtName.setText("");
@@ -124,26 +164,72 @@ public class OperatorGUI extends JFrame {
                 }
             }
         });
+        btnSrc.addActionListener(e -> {
+            String name = txtNameSrc.getText();
+            String userName = txtUserNameSrc.getText();
+            String sqlQuery = User.searchQuery(name, userName);
+            sort(User.userArrayList(sqlQuery));
+        });
+
+        btnListele.addActionListener(e -> {
+            sort();
+        });
+        exitButton.addActionListener(e -> {
+            dispose();
+        });
+
     }
+
+    public boolean addPatika() {
+        String name = Helper.controlFirstLetter(txtAddPatikaName.getText());
+        boolean result = Patika.add(name);
+        if (result){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    private void sortPatika() {
+        DefaultTableModel tableModel = (DefaultTableModel) patikasTable.getModel();
+        tableModel.setRowCount(0);
+        for (Patika patika: Patika.getList()){
+            row_patika_list[0] = patika.getId();
+            row_patika_list[1] = patika.getName();
+            mdl_patika_list.addRow(row_patika_list);
+        }
+    }
+
     public void sort(){
         DefaultTableModel clearModel = (DefaultTableModel) usersTable.getModel();
         clearModel.setRowCount(0);
-        Object[] col_user_list = {"ID", "Ad Soyad", "Kullanıcı Adı", "Şifre", "Üyelik Tipi"};
         for(User user: User.getList()){
-            mdl_user_list.setColumnIdentifiers(col_user_list);
-            Object[] row = new Object[col_user_list.length];
-            row[0] = user.getId();
-            row[1] = user.getName();
-            row[2] = user.getUserName();
-            row[3] = user.getPassword();
-            row[4] = user.getType_id();
-            mdl_user_list.addRow(row);
+            row_user_list[0] = user.getId();
+            row_user_list[1] = user.getName();
+            row_user_list[2] = user.getUserName();
+            row_user_list[3] = user.getPassword();
+            row_user_list[4] = user.getType_id();
+            mdl_user_list.addRow(row_user_list);
         }
         User.countCurrent();
     }
-    public boolean addUser(int id){
-        String name = txtName.getText();
-        String userName = txtUserName.getText();
+    public void sort(ArrayList<User> users){
+        DefaultTableModel clearModel = (DefaultTableModel) usersTable.getModel();
+        clearModel.setRowCount(0);
+        for(User user: users){
+        row_user_list[0] = user.getId();
+        row_user_list[1] = user.getName();
+        row_user_list[2] = user.getUserName();
+        row_user_list[3] = user.getPassword();
+        row_user_list[4] = user.getType_id();
+        mdl_user_list.addRow(row_user_list);
+    }
+        User.countCurrent();
+}
+    public boolean addUser(){
+        String name = User.controlFirstLetter(txtName.getText());
+        String userName = User.controlFirstLetter(txtUserName.getText());
         String password = txtPastword.getText();
         String type = comboBox1.getSelectedItem().toString();
        boolean result = User.add(name, userName, password,type);

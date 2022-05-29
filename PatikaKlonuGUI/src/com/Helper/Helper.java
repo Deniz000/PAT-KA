@@ -52,7 +52,10 @@ public class Helper {
         }
         return point;
     }
-
+    public static String controlFirstLetter(String value){
+        String deger = (value.substring(0,1).toUpperCase() + value.substring(1).toLowerCase()).trim();
+        return deger;
+    }
     public static void setLayout(){
         for(UIManager.LookAndFeelInfo info: UIManager.getInstalledLookAndFeels()){
             if("Nimbus".equals(info.getName())){

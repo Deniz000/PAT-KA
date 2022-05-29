@@ -91,7 +91,7 @@ public class User {
     public static int countCurrent() {
         String query = "Select count(*) as total From users";
         int count = -1;
-        int a = -1;
+
         try {
             Statement st = DbConnector.getInstance().createStatement();
             ResultSet rs3 = st.executeQuery(query);
@@ -121,6 +121,7 @@ public class User {
         }
         return typeValue;
     }
+
     public static boolean add(String name, String userName, String password, String type) {
         int typeValue = switchControl(type);
 
@@ -139,8 +140,6 @@ public class User {
         }
         return false;
     }
-
-
     public static boolean deleteById(int idValue) {
         String sql = "delete from users where id = ?";
         try {
@@ -153,7 +152,6 @@ public class User {
         }
         return false;
     }
-
     public static boolean update(int id, String name, String userName, String password, String type){
         int typeValue = switchControl(type);
         String query = "Update users set name = ?, user_name =?, password=?, type_id = ? where id = ?";
@@ -171,5 +169,38 @@ public class User {
         }
         return true;
     }
+    public static ArrayList<User> userArrayList(String query){
+        ArrayList<User> users = new ArrayList<>();
+        User obj;
+        try {
+            Statement statement = DbConnector.getInstance().createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            while(rs.next()){
+                obj = new User();
+                obj.setId(rs.getInt("id"));
+                obj.setName(rs.getString("name"));
+                obj.setUserName(rs.getString("user_name"));
+                obj.setPassword(rs.getString("password"));
+                obj.setType_id(rs.getInt("type_id"));
+                users.add(obj);
+            }
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+    public static String searchQuery(String name, String userName){
+        String sql = "select * from users where name like '%{{name}}%' and user_name like '%{{user_name}}%'";
+        sql = sql.replace("{{name}}", name);
+        sql = sql.replace("{{user_name}}", userName);
+
+        return sql;
+    }
+
+    public static String controlFirstLetter(String value){
+        String deger = (value.substring(0,1).toUpperCase() + value.substring(1).toLowerCase()).trim();
+        return deger;
+    }
 }
