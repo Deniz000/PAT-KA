@@ -9,26 +9,29 @@ import java.util.concurrent.Executors;
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
-        List<Integer> fullNumber = new ArrayList<>();
-        for(int i = 0; i <10000; i++){
-            fullNumber.add(i);
+
+        List<Integer> array = new ArrayList<>();
+
+        for (int i = 1; i <= 10000; i++) {
+            array.add(i);
         }
-        FindNumber findNumber1 = new FindNumber(fullNumber.subList(0,2500));
-        Thread t1 = new Thread(findNumber1);
-        t1.start();
 
-        FindNumber findNumber2 = new FindNumber(fullNumber.subList(2500,5000));
-        Thread t2 = new Thread(findNumber2);
-        t2.start();
+        List<Integer> subArray1 = array.subList(0, 2500);
+        List<Integer> subArray2 = array.subList(2500, 5000);
+        List<Integer> subArray3 = array.subList(5000, 7500);
+        List<Integer> subArray4 = array.subList(7500, 10000);
 
-        FindNumber findNumber3 = new FindNumber(fullNumber.subList(5000,7500));
-        Thread t3 = new Thread(findNumber3);
-        t3.start();
+        FindNumber helper1 = new FindNumber(subArray1);
+        helper1.start();
 
-        FindNumber findNumber4 = new FindNumber(fullNumber.subList(7500,10000));
-        Thread t4 = new Thread(findNumber4);
-        t4.start();
+        FindNumber helper2 = new FindNumber(subArray2);
+        helper2.start();
 
+        FindNumber helper3 = new FindNumber(subArray3);
+        helper3.start();
+
+        FindNumber helper4 = new FindNumber(subArray4);
+        helper4.start();
 
     }
 }
