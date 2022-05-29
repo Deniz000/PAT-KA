@@ -9,8 +9,8 @@ import com.Model.User;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class OperatorGUI extends JFrame {
@@ -48,7 +48,12 @@ public class OperatorGUI extends JFrame {
     private DefaultTableModel mdl_user_list; //vektor tipli iki değişkeni biri başlık tutar diğeri satırları
     Object[] col_user_list = {"ID", "Ad Soyad", "Kullanıcı Adı", "Şifre", "Üyelik Tipi"};
     private Object[] row_user_list =  new Object[col_user_list.length];
-    int count = 7;
+
+    private JPopupMenu  patikaMenu;
+
+
+
+
     public OperatorGUI(){
         Helper.setLayout();
         add(mainWrapper);
@@ -61,11 +66,50 @@ public class OperatorGUI extends JFrame {
         // Object[] firstRow = {"1","Deniz Ozdemir","Deniz","123","1"};
         //mdl_user_list.addRow(firstRow);
         // # Patika Codes
+
+        patikaMenu = new JPopupMenu();
+        JMenuItem updateMenu = new JMenuItem("Güncelle");
+        JMenuItem deleteMenu = new JMenuItem("Sil");
+        patikaMenu.add(updateMenu);
+        patikaMenu.add(deleteMenu);
+
+        updateMenu.addActionListener(e -> {
+            int selectId= Integer.parseInt(patikasTable.getValueAt(patikasTable.getSelectedRow(),0).toString());
+            UpdatePatikaGui updatePatikaGui = new UpdatePatikaGui(Patika.getFetch(selectId));
+            updatePatikaGui.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    sortPatika();
+                }
+            });
+        });
+        deleteMenu.addActionListener(e ->{
+            if(Helper.confirm("sure")) {
+                int selectedId = Integer.parseInt(patikasTable.getValueAt(patikasTable.getSelectedRow(), 0).toString());
+                if(Patika.delete(selectedId)){
+                    Helper.showMsg("succed");
+                    sortPatika();
+                }
+                else{
+                    Helper.showMsg("error");
+                }
+            }
+        });
         mdl_patika_list = new DefaultTableModel();
         mdl_patika_list.setColumnIdentifiers(colm_patika_list);
         patikasTable.setModel(mdl_patika_list);
+        patikasTable.setComponentPopupMenu(patikaMenu);
         patikasTable.getTableHeader().setReorderingAllowed(false);
         patikasTable.getColumnModel().getColumn(0).setMaxWidth(100);
+
+        patikasTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Point point = e.getPoint();
+                int selectedRow = patikasTable.rowAtPoint(point);
+                patikasTable.setRowSelectionInterval(selectedRow,selectedRow);
+            }
+        });
         sortPatika();
         btnAddPatika.addActionListener(e -> {
             if(Helper.isFieldEmpty(txtAddPatikaName)){
@@ -152,15 +196,17 @@ public class OperatorGUI extends JFrame {
                 Helper.showMsg("fill");
             }
             else{
-                if(deleteUserByıd()){
-                    Helper.showMsg("succed");
-                    sort();
-                    txtDeleteId.setText("");
-                    return;
-                }
-                else{
-                    System.out.println("Üzgünüz. Bir aksilik oldu!");
-                    return;
+                if (Helper.confirm("sure")) {
+                    if(deleteUserByıd()){
+                        Helper.showMsg("succed");
+                        sort();
+                        txtDeleteId.setText("");
+                        return;
+                    }
+                    else{
+                        System.out.println("Üzgünüz. Bir aksilik oldu!");
+                        return;
+                    }
                 }
             }
         });

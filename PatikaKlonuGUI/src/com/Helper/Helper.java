@@ -9,7 +9,7 @@ public class Helper {
     }
 
     public static void showMsg(String msg){
-        optionPageTR();
+        Helper.optionPageTR();
         String mesaj;
         String title;
         switch (msg){
@@ -34,6 +34,8 @@ public class Helper {
     }
     public static void optionPageTR(){
         UIManager.put("OptionPane.okButtonText", "Tamam");
+        UIManager.put("OptionPane.yesButtonText", "Evet");
+        UIManager.put("OptionPane.noButtonText", "Hayır");
     }
     public static int screenCenterLoc(String axis, Dimension size){
         //Dimension kısmı bizim oluşturduğumuz ekranın boyutu
@@ -67,5 +69,19 @@ public class Helper {
             }
             break;
         }
+    }
+
+    public static boolean confirm(String str) {
+        String msg;
+        switch (str){
+            case "sure":
+                msg = "Bu işlemi gerçekleştirmek istediğine emin misiniz?";
+                break;
+            default:
+                msg = str;
+                break;
+        }
+
+        return JOptionPane.showConfirmDialog(null,msg,"!",JOptionPane.YES_NO_OPTION) == 0;
     }
 }
