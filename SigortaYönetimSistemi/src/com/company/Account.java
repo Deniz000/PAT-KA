@@ -5,12 +5,14 @@ import com.sun.scenario.effect.impl.sw.java.JSWColorAdjustPeer;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Account {
+public abstract class Account {
     private static User user = new User();
     private boolean AuthenticationStatus = true;
     private Scanner scanner = new Scanner(System.in);
     private int id,yas;
     private String isim,soyisim,email,sifre, meslek;
+
+    public abstract void insurancePolicy(Account account);
 
     public boolean register(){
         System.out.println("KULLANICI KAYIT EKRANI");
