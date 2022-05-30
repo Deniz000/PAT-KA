@@ -42,6 +42,10 @@ public class OperatorGUI extends JFrame {
     private JTable patikasTable;
     private JTextField txtAddPatikaName;
     private JButton btnAddPatika;
+    private JPanel panelCourseList;
+    private JTable tblCourseList;
+    private JPanel panelCourseRight;
+    private JTextField txtCourseName;
     private DefaultTableModel mdl_patika_list;
     Object[] colm_patika_list = {"ID", "Patika Adı"};
     private Object[] row_patika_list = new Object[colm_patika_list.length];

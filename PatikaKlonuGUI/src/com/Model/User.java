@@ -203,4 +203,21 @@ public class User {
         String deger = (value.substring(0,1).toUpperCase() + value.substring(1).toLowerCase()).trim();
         return deger;
     }
+
+    public static User getFetch(int id){
+        User obj = null;
+        String sql = "select * from users where id = ?";
+        try {
+            PreparedStatement preparedStatement = DbConnector.getInstance().prepareStatement(sql);
+            preparedStatement.setInt(1,id);
+            ResultSet set = preparedStatement.executeQuery();
+            while(set.next()){
+                obj = new User(set.getInt("id"),set.getString("name"),
+                        set.getString("user_name"),set.getString("password"), set.getInt("type_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
 }
