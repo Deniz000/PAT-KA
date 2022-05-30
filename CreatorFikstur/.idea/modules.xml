@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FikstürOlusturucu.iml" filepath="$PROJECT_DIR$/FikstürOlusturucu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CreatorFikstur.iml" filepath="$PROJECT_DIR$/CreatorFikstur.iml" />
     </modules>
   </component>
 </project>
