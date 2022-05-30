@@ -19,9 +19,24 @@ public class AdressManager {
         this.user = user;
     }
 
-    public static void addAdress(Adress adress){
-
+    public void addAdress(Adress adress){
+        System.out.println("Adres ekleme bölümü");
+        Helper.addressTransactions();
     }
-    public static void deleteAdress(List<Adress> adress){}
+    public void deleteAdress(String adress){
+        System.out.println("Adres silme bölümü");
+        for (int i = 0; i < Account.getUser().getAdresListesi().size(); i++) {
+            if (Account.getUser().getAdresListesi().get(i).getAdress().contains(adress)) {
+                Account.getUser().getAdresListesi().remove(i);
+            }
+        }
+        System.out.println("Silme işlemi başarılı");
+        System.out.println("Yeni adres listesi: ");
+        int i = 0;
+        while (i<Account.getUser().getAdresListesi().size()){
+            System.out.println(Account.getUser().getAdresListesi().get(i).getAdress());
+            i++;
+        }
+    }
 
 }

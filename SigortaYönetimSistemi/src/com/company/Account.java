@@ -1,5 +1,7 @@
 package com.company;
 
+import com.sun.scenario.effect.impl.sw.java.JSWColorAdjustPeer;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -31,41 +33,10 @@ public class Account {
         yas = scanner.nextInt();
         user.setYas(yas);
         System.out.println(" Adresiniz: ");
-        addressTransactions();
+        Helper.addressTransactions();
         return AuthenticationStatus;
     }
-    private void addressTransactions(){
-        Adress myAdress;
-        ArrayList<Adress> adresListesi = new ArrayList<>();
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Kaç adres gireceksin");
-        int adet = scanner.nextInt();
-        int i = 0;
-        String adres0 = "";
-        int a0;
-        while (i<adet) {
-            System.out.println("Ev adresi girişi için 1 'e basınız. ");
-            System.out.println("İş adresi girişi için 2 'ye basınız. ");
-            a0 = scanner.nextInt();
-            System.out.print("Adres : ");
-            switch (a0) {
-                case 1:
-                    myAdress = new HomeAddress(scanner.next());
-                    adresListesi.add(myAdress);
-                    break;
-                case 2:
-                    myAdress = new BusinessAddress(scanner.next());
-                    adresListesi.add(myAdress);
-                    break;
-                default:
-                    System.out.println("Geçerli bir giriş yapınız.");
-                    break;
-            }
-            i++;
-        }
-        user.setAdresListesi(adresListesi);
 
-    }
 
     public boolean isAuthenticationStatus() {
         return AuthenticationStatus;
@@ -81,6 +52,27 @@ public class Account {
 
     public static void setUser(User user) {
         Account.user = user;
+    }
+
+
+    public void login() throws InvalidAuthenticationException {
+        System.out.println("KULLANICI GİRİŞ EKRANI");
+        System.out.print(" email: ");
+        String mail = scanner.next();
+        System.out.print(" şifreniz :");
+        String sifre = scanner.next();
+
+        if (user.getEmail().contains(mail) && user.getSifre().contains(sifre)){
+            System.out.println("Tekrar hoşgeldin " + user.getIsim());
+            EAuthenticationStatus status = EAuthenticationStatus.SUCCESS;
+        }
+        else{
+            throw new InvalidAuthenticationException("Giriş yapılamadı");
+        }
+    }
+    enum EAuthenticationStatus{
+        SUCCESS,
+        FAIL
     }
 
     public final static void showUserInfo(){

@@ -13,6 +13,7 @@ public class User {
     private String meslek;
     private int yas;
     private ArrayList<Adress> adresListesi = new ArrayList<>();
+    private ArrayList<Adress> tempAdresListesi = new ArrayList<>();
     private Date sonGiristarihi;
 
     public User() {
@@ -92,7 +93,13 @@ public class User {
     }
 
     public void setAdresListesi(ArrayList<Adress> adresListesi) {
-        this.adresListesi = adresListesi;
+        int i = 0;
+        while (i < adresListesi.size()){
+            tempAdresListesi.add(adresListesi.get(i));
+            i++;
+        }
+
+        this.adresListesi = tempAdresListesi;
     }
 
     public Date getSonGiristarihi() {
