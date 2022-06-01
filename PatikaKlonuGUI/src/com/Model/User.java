@@ -88,8 +88,31 @@ public class User {
         return arrayList;
     }
 
+
+    public static ArrayList<User> getEducatorList() {
+        ArrayList<User> arrayList = new ArrayList<>();
+        String quarry = "Select * From users where type_id = 2";
+        User obj;
+        try {
+            Statement statement = DbConnector.getInstance().createStatement();
+            ResultSet rs = statement.executeQuery(quarry);
+            while (rs.next()) {
+                obj = new User();
+                obj.setId(rs.getInt("id"));
+                obj.setName(rs.getString("name"));
+                obj.setUserName(rs.getString("user_name"));
+                obj.setPassword(rs.getString("password"));
+                obj.setType_id(rs.getInt("type_id"));
+                arrayList.add(obj);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return arrayList;
+    }
+
     public static int countCurrent() {
-        String query = "Select count(*) as total From users";
+        String query = "select id from users where id > (select count(*) from users)";
         int count = -1;
 
         try {
@@ -142,6 +165,10 @@ public class User {
     }
     public static boolean deleteById(int idValue) {
         String sql = "delete from users where id = ?";
+        ArrayList<Course> courseList = Course.getListByUserId(idValue);
+        for(Course c : courseList){
+            Course.deleteById(c.getId());
+        }
         try {
             PreparedStatement preparedStatement = DbConnector.getInstance().prepareStatement(sql);
             preparedStatement.setInt(1,idValue);
@@ -167,6 +194,7 @@ public class User {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return true;
     }
     public static ArrayList<User> userArrayList(String query){

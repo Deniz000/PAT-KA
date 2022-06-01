@@ -53,7 +53,7 @@ public class Patika {
         return patikas;
     }
     public static int countCurrent(){
-        String sql = "select count(*) as total from patika";
+        String sql = "select id from patika where id >= (select count(*) from patika)";
         int count = -1;
         try {
             Statement statement = DbConnector.getInstance().createStatement();
@@ -98,6 +98,21 @@ public class Patika {
         try {
             PreparedStatement preparedStatement = DbConnector.getInstance().prepareStatement(sql);
             preparedStatement.setInt(1,id);
+            ResultSet set = preparedStatement.executeQuery();
+            while(set.next()){
+                obj = new Patika(set.getInt("id"),set.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
+    public static Patika getFetch(String name){
+        Patika obj = null;
+        String sql = "select * from patika where name = ?";
+        try {
+            PreparedStatement preparedStatement = DbConnector.getInstance().prepareStatement(sql);
+            preparedStatement.setString(1,name);
             ResultSet set = preparedStatement.executeQuery();
             while(set.next()){
                 obj = new Patika(set.getInt("id"),set.getString("name"));
