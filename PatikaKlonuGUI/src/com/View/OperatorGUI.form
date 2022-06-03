@@ -209,7 +209,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="ea11" binding="panelCourseList" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="c3fbe" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <tabbedpane title="Dersler"/>
@@ -217,20 +217,20 @@
             <properties/>
             <border type="none"/>
             <children>
-              <scrollpane id="ceb52">
+              <scrollpane id="2e3da">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="a87e4" class="javax.swing.JTable" binding="tblCourseList">
+                  <component id="106e1" class="javax.swing.JTable" binding="tableCourse">
                     <constraints/>
                     <properties/>
                   </component>
                 </children>
               </scrollpane>
-              <grid id="76717" binding="panelCourseRight" layout-manager="GridLayoutManager" row-count="10" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="d8ebb" binding="pnlAddCourse" layout-manager="GridLayoutManager" row-count="12" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="10" left="10" bottom="10" right="10"/>
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -238,25 +238,20 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="cf72e" class="javax.swing.JLabel">
+                  <component id="77702" class="javax.swing.JLabel">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="Ders Adı: "/>
+                      <text value="Ders Adı:"/>
                     </properties>
                   </component>
-                  <hspacer id="9a9c4">
+                  <vspacer id="f7e96">
                     <constraints>
-                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                  </hspacer>
-                  <vspacer id="6e462">
-                    <constraints>
-                      <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                     </constraints>
                   </vspacer>
-                  <component id="dd86c" class="javax.swing.JTextField" binding="txtCourseName">
+                  <component id="61567" class="javax.swing.JTextField" binding="txtCourseName">
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
@@ -264,43 +259,51 @@
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="bd6f6" class="javax.swing.JLabel">
+                  <component id="dafbe" class="javax.swing.JLabel">
                     <constraints>
                       <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="Programlama Dili:"/>
+                      <text value="Programlama Dili :"/>
                     </properties>
                   </component>
-                  <component id="a56d7" class="javax.swing.JLabel">
+                  <component id="3e581" class="javax.swing.JTextField" binding="txtCourseLanguage">
+                    <constraints>
+                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="3727f" class="javax.swing.JLabel">
                     <constraints>
                       <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="Patika:"/>
+                      <text value="Patika :"/>
                     </properties>
                   </component>
-                  <component id="a6f88" class="javax.swing.JComboBox" binding="cmbPatika">
+                  <component id="3a540" class="javax.swing.JComboBox" binding="cmbPatika">
                     <constraints>
                       <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="f1a9e" class="javax.swing.JLabel">
+                  <component id="6d30d" class="javax.swing.JLabel">
                     <constraints>
                       <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="Eğitmen : "/>
+                      <text value="Eğitmen :"/>
                     </properties>
                   </component>
-                  <component id="a4eca" class="javax.swing.JComboBox" binding="cmbEgitmen">
+                  <component id="fa2fe" class="javax.swing.JComboBox" binding="cmbEducator">
                     <constraints>
                       <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="cacca" class="javax.swing.JButton" binding="btnAddCourse">
+                  <component id="9da3" class="javax.swing.JButton" binding="btnAddCourse">
                     <constraints>
                       <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -308,13 +311,21 @@
                       <text value="Ekle"/>
                     </properties>
                   </component>
-                  <component id="f8345" class="javax.swing.JTextField" binding="txtLangName">
+                  <component id="7f0e2" class="javax.swing.JTextField" binding="txtDeletedCourseId">
                     <constraints>
-                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                      <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
                       </grid>
                     </constraints>
                     <properties/>
+                  </component>
+                  <component id="c6e06" class="javax.swing.JButton" binding="btnDeleteCourse">
+                    <constraints>
+                      <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Sil"/>
+                    </properties>
                   </component>
                 </children>
               </grid>

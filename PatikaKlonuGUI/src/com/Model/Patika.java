@@ -53,7 +53,7 @@ public class Patika {
         return patikas;
     }
     public static int countCurrent(){
-        String sql = "select id from patika where id >= (select count(*) from patika)";
+        String sql = "select count(*) as total from patika";
         int count = -1;
         try {
             Statement statement = DbConnector.getInstance().createStatement();

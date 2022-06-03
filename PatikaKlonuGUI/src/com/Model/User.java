@@ -88,31 +88,8 @@ public class User {
         return arrayList;
     }
 
-
-    public static ArrayList<User> getEducatorList() {
-        ArrayList<User> arrayList = new ArrayList<>();
-        String quarry = "Select * From users where type_id = 2";
-        User obj;
-        try {
-            Statement statement = DbConnector.getInstance().createStatement();
-            ResultSet rs = statement.executeQuery(quarry);
-            while (rs.next()) {
-                obj = new User();
-                obj.setId(rs.getInt("id"));
-                obj.setName(rs.getString("name"));
-                obj.setUserName(rs.getString("user_name"));
-                obj.setPassword(rs.getString("password"));
-                obj.setType_id(rs.getInt("type_id"));
-                arrayList.add(obj);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return arrayList;
-    }
-
     public static int countCurrent() {
-        String query = "select id from users where id > (select count(*) from users)";
+        String query = "Select count(*) as total From users";
         int count = -1;
 
         try {
@@ -126,7 +103,8 @@ public class User {
         }
         return count;
     }
-    public static int switchControl(String type){
+
+    public static int switchControl(String type) {
         int typeValue;
         switch (type) {
             case "Operator":
@@ -163,15 +141,12 @@ public class User {
         }
         return false;
     }
+
     public static boolean deleteById(int idValue) {
         String sql = "delete from users where id = ?";
-        ArrayList<Course> courseList = Course.getListByUserId(idValue);
-        for(Course c : courseList){
-            Course.deleteById(c.getId());
-        }
         try {
             PreparedStatement preparedStatement = DbConnector.getInstance().prepareStatement(sql);
-            preparedStatement.setInt(1,idValue);
+            preparedStatement.setInt(1, idValue);
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -179,31 +154,32 @@ public class User {
         }
         return false;
     }
-    public static boolean update(int id, String name, String userName, String password, String type){
+
+    public static boolean update(int id, String name, String userName, String password, String type) {
         int typeValue = switchControl(type);
         String query = "Update users set name = ?, user_name =?, password=?, type_id = ? where id = ?";
         try {
             PreparedStatement preparedStatement = DbConnector.getInstance().prepareStatement(query);
-            preparedStatement.setString(1,name);
-            preparedStatement.setString(2,userName);
-            preparedStatement.setString(3,password);
-            preparedStatement.setInt(4,typeValue);
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, userName);
+            preparedStatement.setString(3, password);
+            preparedStatement.setInt(4, typeValue);
             preparedStatement.setInt(5, id);
 
             return (preparedStatement.executeUpdate() != -1);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return true;
     }
-    public static ArrayList<User> userArrayList(String query){
+
+    public static ArrayList<User> userArrayList(String query) {
         ArrayList<User> users = new ArrayList<>();
         User obj;
         try {
             Statement statement = DbConnector.getInstance().createStatement();
             ResultSet rs = statement.executeQuery(query);
-            while(rs.next()){
+            while (rs.next()) {
                 obj = new User();
                 obj.setId(rs.getInt("id"));
                 obj.setName(rs.getString("name"));
@@ -219,7 +195,7 @@ public class User {
         return users;
     }
 
-    public static String searchQuery(String name, String userName){
+    public static String searchQuery(String name, String userName) {
         String sql = "select * from users where name like '%{{name}}%' and user_name like '%{{user_name}}%'";
         sql = sql.replace("{{name}}", name);
         sql = sql.replace("{{user_name}}", userName);
@@ -227,25 +203,25 @@ public class User {
         return sql;
     }
 
-    public static String controlFirstLetter(String value){
-        String deger = (value.substring(0,1).toUpperCase() + value.substring(1).toLowerCase()).trim();
+    public static String controlFirstLetter(String value) {
+        String deger = (value.substring(0, 1).toUpperCase() + value.substring(1).toLowerCase()).trim();
         return deger;
     }
 
-    public static User getFetch(int id){
-        User obj = null;
-        String sql = "select * from users where id = ?";
+    public static User getFetch(String name) {
+        User user = null;
+        String sql = "select * from users where name = ?";
         try {
-            PreparedStatement preparedStatement = DbConnector.getInstance().prepareStatement(sql);
-            preparedStatement.setInt(1,id);
-            ResultSet set = preparedStatement.executeQuery();
-            while(set.next()){
-                obj = new User(set.getInt("id"),set.getString("name"),
-                        set.getString("user_name"),set.getString("password"), set.getInt("type_id"));
+            PreparedStatement pr = DbConnector.getInstance().prepareStatement(sql);
+            pr.setString(1, name);
+            ResultSet set = pr.executeQuery();
+            while (set.next()) {
+                user = new User(set.getInt("id"), set.getString("name"), set.getString("user_name"), set.getString("password"), set.getInt("type_id"));
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return obj;
+        return user;
     }
 }
