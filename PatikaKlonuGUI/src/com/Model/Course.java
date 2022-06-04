@@ -88,6 +88,28 @@ public class Course {
     }
 
     public static boolean deleteById(int idValue) {
+        String sql = "delete from courses where id = ?";
+
+        try {
+            PreparedStatement preparedStatement = DbConnector.getInstance().prepareStatement(sql);
+            preparedStatement.setInt(1, idValue);
+            return preparedStatement.executeUpdate() != -1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    public static boolean deleteByUserId(int idValue) {
+        String sql = "delete from courses where user_id = ?";
+
+        try {
+            PreparedStatement preparedStatement = DbConnector.getInstance().prepareStatement(sql);
+            preparedStatement.setInt(1, idValue);
+            return preparedStatement.executeUpdate() != -1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     public int getId() {

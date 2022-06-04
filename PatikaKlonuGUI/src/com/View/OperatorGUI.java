@@ -96,6 +96,7 @@ public class OperatorGUI extends JFrame {
                 @Override
                 public void windowClosed(WindowEvent e) {
                     sortPatika();
+                    comboSortPatika();
                 }
             });
         });
@@ -104,7 +105,8 @@ public class OperatorGUI extends JFrame {
                 int selectedId = Integer.parseInt(patikasTable.getValueAt(patikasTable.getSelectedRow(), 0).toString());
                 if(Patika.delete(selectedId)){
                     Helper.showMsg("succed");
-                    
+                    sortPatika();
+                    comboSortPatika();
                 }
             }
         });
@@ -134,6 +136,7 @@ public class OperatorGUI extends JFrame {
                     Helper.showMsg("succed");
                     txtAddPatikaName.setText("");
                     sortPatika();
+                    comboSortPatika();
                     return;
                 }
                 else{
@@ -193,6 +196,7 @@ public class OperatorGUI extends JFrame {
                 if(addUser()){
                     Helper.showMsg("succed");
                     sortUser();
+                    comboSortEducator();
                     txtName.setText("");
                     txtUserName.setText("");
                     txtPastword.setText("");
@@ -214,6 +218,8 @@ public class OperatorGUI extends JFrame {
                     if(deleteUserByıd()){
                         Helper.showMsg("succed");
                         sortUser();
+                        comboSortEducator();
+                        sortCourse();
                         txtDeleteId.setText("");
                         return;
                     }
@@ -248,6 +254,15 @@ public class OperatorGUI extends JFrame {
         comboSortEducator();
         comboSortPatika();
 
+        tableCourse.getSelectionModel().addListSelectionListener(e -> {
+            try {
+                String selectedCourseId = tableCourse.getValueAt(tableCourse.getSelectedRow(), 0).toString();
+                txtDeletedCourseId.setText(selectedCourseId);
+            }
+            catch (Exception exception){
+                System.out.println(exception.getMessage());
+            }
+        });
         btnAddCourse.addActionListener(e -> {
             if (Helper.isFieldEmpty(txtCourseName)||
                     Helper.isFieldEmpty(txtCourseLanguage)){

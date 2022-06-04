@@ -1,6 +1,7 @@
 package com.Model;
 
 import com.Helper.DbConnector;
+import com.Helper.Helper;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,7 +13,6 @@ public class User {
     private String userName;
     private String password;
     private int type_id;
-
 
     public User() {
     }
@@ -90,20 +90,39 @@ public class User {
 
     public static int countCurrent() {
         String query = "Select count(*) as total From users";
-        int count = -1;
+        int count = 0;
 
         try {
             Statement st = DbConnector.getInstance().createStatement();
             ResultSet rs3 = st.executeQuery(query);
             while (rs3.next()) {
                 count = rs3.getInt(1);
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        count++;
+        if(count == lastId()){
+            count++;
+        }
         return count;
     }
 
+    public static int lastId(){
+        String sql = "select max(id) from users";
+        int id = 0;
+        try {
+            Statement statement = DbConnector.getInstance().createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()){
+                id = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
     public static int switchControl(String type) {
         int typeValue;
         switch (type) {
@@ -126,7 +145,7 @@ public class User {
     public static boolean add(String name, String userName, String password, String type) {
         int typeValue = switchControl(type);
 
-        int total = countCurrent() + 1;
+        int total = countCurrent();
         String querry = "INSERT INTO users(id,name,user_name,password,type_id) values (?,?,?,?,?) ";
         try {
             PreparedStatement pr = DbConnector.getInstance().prepareStatement(querry);
@@ -143,15 +162,24 @@ public class User {
     }
 
     public static boolean deleteById(int idValue) {
+        System.out.println("A1");
         String sql = "delete from users where id = ?";
+        int type = getFetch(idValue).getType_id();
         try {
+            System.out.println("A2");
             PreparedStatement preparedStatement = DbConnector.getInstance().prepareStatement(sql);
             preparedStatement.setInt(1, idValue);
+            if(type == 2){
+                Course.deleteByUserId(idValue);
+                Helper.showMsg("Bu eğitmene ait tüm kurslar silindi");
+            }
+            System.out.println("A3");
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return false;
     }
 
@@ -217,7 +245,22 @@ public class User {
             ResultSet set = pr.executeQuery();
             while (set.next()) {
                 user = new User(set.getInt("id"), set.getString("name"), set.getString("user_name"), set.getString("password"), set.getInt("type_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
 
+    public static User getFetch(int id) {
+        User user = null;
+        String sql = "select * from users where id = ?";
+        try {
+            PreparedStatement pr = DbConnector.getInstance().prepareStatement(sql);
+            pr.setInt(1, id);
+            ResultSet set = pr.executeQuery();
+            while (set.next()) {
+                user = new User(set.getInt("id"), set.getString("name"), set.getString("user_name"), set.getString("password"), set.getInt("type_id"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

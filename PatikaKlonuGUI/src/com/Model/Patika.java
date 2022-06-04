@@ -54,7 +54,7 @@ public class Patika {
     }
     public static int countCurrent(){
         String sql = "select count(*) as total from patika";
-        int count = -1;
+        int count = 0;
         try {
             Statement statement = DbConnector.getInstance().createStatement();
             ResultSet rs = statement.executeQuery(sql);
@@ -64,11 +64,31 @@ public class Patika {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        count++;
+
+        if(count == lastId()){
+            count++;
+        }
         return count;
     }
 
+    public static int lastId(){
+        String sql = "select max(id) from patika";
+        int id = 0;
+        try {
+            Statement statement = DbConnector.getInstance().createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()){
+                id = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
+
     public static boolean add(String name){
-        int total = countCurrent() + 1;
+        int total = countCurrent();
         String sql = "insert into patika(id,name) values(?,?)";
         try {
             PreparedStatement preparedStatement = DbConnector.getInstance().prepareStatement(sql);
