@@ -6,6 +6,7 @@ import com.Helper.Helper;
 import com.Helper.Item;
 import com.Model.Course;
 import com.Model.Patika;
+import com.Model.Task;
 import com.Model.User;
 
 import javax.swing.*;
@@ -14,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class OperatorGUI extends JFrame {
 
@@ -53,6 +55,10 @@ public class OperatorGUI extends JFrame {
     private JButton btnAddCourse;
     private JTextField txtDeletedCourseId;
     private JButton btnDeleteCourse;
+    private JComboBox comboEduNames;
+    private JTextPane txtTasks;
+    private JButton btnAddTask;
+    private JTable tblTasks;
     private DefaultTableModel mdl_patika_list;
     private Object[] colm_patika_list = {"ID", "Patika Adı"};
     private Object[] row_patika_list = new Object[colm_patika_list.length];
@@ -68,10 +74,12 @@ public class OperatorGUI extends JFrame {
     private Object[] row_course_list = new Object[col_course_list.length];
 
 
+    private DefaultTableModel mdl_task_list;
+    private Object[] col_task_list = {"ID", "Görev", "Eğitmen"};
+    private Object[] row_task_list = new Object[col_task_list.length];
 
 
     public OperatorGUI(){
-        Helper.setLayout();
         add(mainWrapper);
         setSize(1000,600);
         setLocation(Helper.screenCenterLoc("x",getSize()),Helper.screenCenterLoc("y",getSize()));
@@ -197,6 +205,7 @@ public class OperatorGUI extends JFrame {
                     Helper.showMsg("succed");
                     sortUser();
                     comboSortEducator();
+                    comboEduName();
                     txtName.setText("");
                     txtUserName.setText("");
                     txtPastword.setText("");
@@ -219,6 +228,7 @@ public class OperatorGUI extends JFrame {
                         Helper.showMsg("succed");
                         sortUser();
                         comboSortEducator();
+                        comboEduName();
                         sortCourse();
                         txtDeleteId.setText("");
                         return;
@@ -242,6 +252,7 @@ public class OperatorGUI extends JFrame {
         });
         exitButton.addActionListener(e -> {
             dispose();
+            LoginGui loginGui = new LoginGui();
         });
 
 
@@ -253,6 +264,7 @@ public class OperatorGUI extends JFrame {
         sortCourse();
         comboSortEducator();
         comboSortPatika();
+        comboEduName();
 
         tableCourse.getSelectionModel().addListSelectionListener(e -> {
             try {
@@ -302,6 +314,65 @@ public class OperatorGUI extends JFrame {
                 }
             }
         });
+
+        mdl_task_list = new DefaultTableModel();
+        mdl_task_list.setColumnIdentifiers(col_task_list);
+        tblTasks.setModel(mdl_task_list);
+        tblTasks.getTableHeader().setReorderingAllowed(false);
+        tblTasks.getColumnModel().getColumn(0).setMaxWidth(100);
+        sortTask();
+
+        btnAddTask.addActionListener(e -> {
+            if(txtTasks.getText() == null){
+                Helper.showMsg("fill");
+            }else{
+                if (addTask()) {
+                    Helper.showMsg("succed");
+                    comboEduName();
+                    sortTask();
+                    txtTasks.setText("");
+                }
+                else{
+                    Helper.showMsg("error");
+                }
+            }
+        });
+    }
+
+    private boolean addTask() {
+        String eduName = Objects.requireNonNull(comboEduNames.getSelectedItem()).toString();
+        int id = User.getFetch(eduName).getId();
+        String task = txtTasks.getText();
+        boolean result = Task.add(id,task);
+        if(result){
+            Helper.showMsg("succed");
+            sortTask();
+            return true;
+        }
+        else{
+            Helper.showMsg("error");
+            return false;
+        }
+    }
+
+
+    public void comboEduName(){
+        comboEduNames.removeAllItems();
+        for(User user : User.getList()) {
+            if (user.getType_id() == 2) {
+                comboEduNames.addItem(new Item(user.getId(), user.getName()).getValue());
+            }
+        }
+    }
+    private void sortTask() {
+        DefaultTableModel tableModel = (DefaultTableModel) tblTasks.getModel();
+        tableModel.setRowCount(0);
+        for(Task task: Task.getList()){
+            row_task_list[0] = task.getId();
+            row_task_list[1] = task.getTask();
+            row_task_list[2] = task.getEducatorId();
+            mdl_task_list.addRow(row_task_list);
+        }
     }
 
     private boolean deletedCourseById() {
@@ -436,11 +507,16 @@ public class OperatorGUI extends JFrame {
     }
 
     public static void main(String[] args) {
+        Helper.setLayout();
         OperatorGUI.args = args;
         DbConnector.getInstance();
 
         OperatorGUI opGUI = new OperatorGUI();
         // proramı çalıştırdığımda direk buradan başalayacak anlamına geliyor.
 
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 }

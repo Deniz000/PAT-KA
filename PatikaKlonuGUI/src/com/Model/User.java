@@ -267,4 +267,21 @@ public class User {
         }
         return user;
     }
+
+    public static User getFetch(String uName, String passWord) {
+        User user = null;
+        String sql = "select * from users where user_name = ? and password = ?";
+        try {
+            PreparedStatement pr = DbConnector.getInstance().prepareStatement(sql);
+            pr.setString(1,uName);
+            pr.setString(2,passWord);
+            ResultSet set = pr.executeQuery();
+            while (set.next()) {
+                user = new User(set.getInt("id"), set.getString("name"), set.getString("user_name"), set.getString("password"), set.getInt("type_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
 }

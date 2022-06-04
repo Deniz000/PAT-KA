@@ -54,18 +54,38 @@ public class Course {
     }
 
     public static int currentTotal(){
-        int total = 0;
-
+        String sql = "select count(*) as total from courses";
+        int count = 0;
         try {
             Statement statement = DbConnector.getInstance().createStatement();
-            ResultSet set = statement.executeQuery("select count(*) from courses");
-            while (set.next()){
-                total = set.getInt(1);
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()){
+                count = rs.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return total;
+        count++;
+
+        if(count == lastId()){
+            count++;
+        }
+        return count;
+    }
+
+    public static int lastId(){
+        String sql = "select max(id) from courses";
+        int id = 0;
+        try {
+            Statement statement = DbConnector.getInstance().createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()){
+                id = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
     }
     public static boolean add(String cName, String cLanguage, String patika, String educator) {
         String sql = "insert into courses(id, user_id, patika_id, name, language) values(?,?,?,?,?)";
